@@ -2,6 +2,7 @@ import { MESSAGE_TYPE, USER } from "./const.js";
 
 export class Room {
     private _socket: { [userId: number]: WebSocket } = {};
+    private _counter = 25;
 
     constructor(private roomId: number, socket: WebSocket) {
         this._socket[USER.SENDER] = socket;
@@ -18,6 +19,8 @@ export class Room {
     }
 
     public send(userId: number, message: any) {
+        this._counter--;
+        if (this._counter <= 0) return this.closeAll();
         const socket = this._getSocket(userId);
         if (!socket) throw new Error('Invalid User');
         const messagePayload = {

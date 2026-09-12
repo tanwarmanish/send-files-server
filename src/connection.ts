@@ -6,7 +6,7 @@ class ConnectionClass {
     private _active = new Map();
 
     constructor() {
-        this._cleanUp();
+        // this._cleanUp();
     }
 
     _cleanUp() {
