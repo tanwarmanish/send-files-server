@@ -1,0 +1,39 @@
+{
+  "name": "file-drop-cli",
+  "version": "0.1.0",
+  "description": "Command-line client for the Send Files P2P transfer app: send/receive files and share text over WebRTC.",
+  "type": "module",
+  "bin": {
+    "filedrop": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/*.test.ts"
+  },
+  "keywords": [
+    "webrtc",
+    "p2p",
+    "file-transfer",
+    "cli"
+  ],
+  "license": "ISC",
+  "dependencies": {
+    "node-datachannel": "^0.33.4",
+    "ws": "^8.21.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "@types/ws": "^8.18.1",
+    "tsup": "^8.5.1",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.0"
+  }
+}
