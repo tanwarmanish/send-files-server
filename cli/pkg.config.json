@@ -1,0 +1,5 @@
+{
+  "pkg": {
+    "assets": ["node_modules/@node-datachannel/**/*"]
+  }
+}

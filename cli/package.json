@@ -16,7 +16,8 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test test/*.test.ts"
+    "test": "tsx --test test/*.test.ts",
+    "build:binary": "node scripts/build-binary.mjs"
   },
   "keywords": [
     "webrtc",
@@ -34,6 +35,8 @@
     "@types/ws": "^8.18.1",
     "tsup": "^8.5.1",
     "tsx": "^4.23.15",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "esbuild": "^0.25.0",
+    "@yao-pkg/pkg": "^6.23.0"
   }
 }

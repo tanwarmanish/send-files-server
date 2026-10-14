@@ -1,0 +1,63 @@
+name: Build filedrop binaries
+
+# Builds single-file executables (no Node.js needed) for Linux, macOS and Windows.
+#  - Run it by hand (Actions tab -> "Build filedrop binaries" -> Run workflow) and download the artifacts, or
+#  - publish a GitHub Release and the binaries are attached to it automatically.
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: linux-x64, os: ubuntu-latest }
+          - { name: macos-arm64, os: macos-latest }
+          - { name: macos-x64, os: macos-15-intel }
+          - { name: windows-x64, os: windows-latest }
+    defaults:
+      run:
+        working-directory: cli
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+      - run: npm test
+      - run: npm run build:binary
+
+      - name: Write SHA-256 checksum
+        shell: bash
+        run: |
+          node -e "
+            const fs = require('fs'), crypto = require('crypto'), path = require('path');
+            for (const f of fs.readdirSync('binaries')) {
+              if (f.endsWith('.sha256')) continue;
+              const hash = crypto.createHash('sha256').update(fs.readFileSync(path.join('binaries', f))).digest('hex');
+              fs.writeFileSync(path.join('binaries', f + '.sha256'), hash + '  ' + f + '\n');
+            }
+          "
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: filedrop-${{ matrix.name }}
+          path: cli/binaries/*
+          if-no-files-found: error
+
+      - name: Attach to the release
+        if: github.event_name == 'release'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" binaries/* --clobber

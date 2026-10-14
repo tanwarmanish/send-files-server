@@ -23,9 +23,11 @@ Options:
 
 Works with the web app too: a code from "filedrop send" can be entered on the site, and vice versa.`;
 
+/** Injected at build time (tsup `define` / esbuild `define`), so no package.json lookup is needed at runtime. */
+declare const __VERSION__: string;
+
 function version(): string {
-  const pkg = JSON.parse(fs.readFileSync(new URL('../package.json', import.meta.url), 'utf8')) as { version: string };
-  return pkg.version;
+  return __VERSION__;
 }
 
 async function main(): Promise<void> {

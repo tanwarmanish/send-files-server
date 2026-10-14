@@ -15,6 +15,43 @@ npm link          # optional: puts `filedrop` on your PATH
 
 Requires Node.js 20 or newer. WebRTC comes from [`node-datachannel`](https://github.com/murat-dogan/node-datachannel), which ships prebuilt binaries for common platforms.
 
+## Standalone binaries (no Node.js needed)
+
+Each [GitHub Release](https://github.com/tanwarmanish/send-files-server/releases) has one executable per platform. Download the one for your machine:
+
+| Platform | File |
+| --- | --- |
+| macOS, Apple Silicon (M1 and newer) | `filedrop-macos-arm64` |
+| macOS, Intel | `filedrop-macos-x64` |
+| Windows | `filedrop-windows-x64.exe` |
+| Linux | `filedrop-linux-x64` |
+
+Each file is about 100 MB because it bundles the Node.js runtime. A `.sha256` file next to each download lets you verify it.
+
+**macOS**
+
+```bash
+curl -L -o filedrop https://github.com/tanwarmanish/send-files-server/releases/latest/download/filedrop-macos-arm64
+chmod +x filedrop
+sudo mv filedrop /usr/local/bin/
+filedrop --help
+```
+
+Use `filedrop-macos-x64` on Intel Macs. Downloading with `curl` avoids the "cannot be opened because the developer cannot be verified" prompt. If you download in a browser instead, run `xattr -d com.apple.quarantine ./filedrop-macos-arm64` once. The binaries are ad-hoc signed, not notarized by Apple.
+
+**Windows**: download `filedrop-windows-x64.exe` and run it from PowerShell or Command Prompt. SmartScreen may say "Windows protected your PC" because the file is not code-signed; choose *More info*, then *Run anyway*. Rename it to `filedrop.exe` and put it in a folder on your `PATH` to use it from anywhere.
+
+**Linux**: `chmod +x filedrop-linux-x64` and move it somewhere on your `PATH`.
+
+### Building the binaries yourself
+
+```bash
+npm install
+npm run build:binary      # writes binaries/filedrop-<os>-<arch>
+```
+
+This builds for the machine you run it on, because the executable embeds that platform's native WebRTC module. The `Build filedrop binaries` workflow builds all platforms and attaches them to a release.
+
 ## Usage
 
 ```bash
